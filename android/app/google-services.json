@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "636356151520",
+    "project_id": "medret-7d661",
+    "storage_bucket": "medret-7d661.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636356151520:android:d03e3fa38429c7b24d2885",
+        "android_client_info": {
+          "package_name": "com.azlinliana.medret"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "636356151520-8ll8c629b94jao8jrrntup89rsi0a3c9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGNrCxW0YSr9pk2Pz1B_rO8NHdMlZa8w4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "636356151520-8ll8c629b94jao8jrrntup89rsi0a3c9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

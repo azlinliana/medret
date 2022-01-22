@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:medret/views/elements/app_theme.dart';
+import 'package:medret/views/manage_registration/login_patient.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MedretApp());
 }
 
@@ -11,6 +15,9 @@ class MedretApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.indigo
+      ),
       title: 'Medication Reminder and Tracker Application',
       home: const LandingPage(),
       debugShowCheckedModeBanner: false,
