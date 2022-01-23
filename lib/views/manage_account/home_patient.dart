@@ -4,6 +4,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:medret/models/medication_model.dart';
 import 'package:medret/views/elements/app_theme.dart';
 import 'package:medret/views/manage_prescription/add_medication_patient.dart';
+import 'package:medret/views/manage_prescription/edit_medication.dart';
 import 'package:medret/views/manage_reminder/notification_service.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -47,6 +48,11 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
     notificationHelper = NotificationService();
     notificationHelper.initializeNotification();
   }
+
+  final medicationNameEditingController = TextEditingController();
+  final medicationPurposeEditingController = TextEditingController();
+  final medicationSizeEditingController = TextEditingController();
+  final medicationNoteEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -158,9 +164,11 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
                         child: FadeInAnimation(
                           child: GestureDetector(
                             onTap: () {
-
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicationPatient(medicationToEdit: snapshot.data!.docs[index])));
                             },
                             onLongPress: () {
+                              setState(() {
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.only(top: 5, right: 20, left: 20),

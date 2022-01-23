@@ -1,6 +1,7 @@
 // Model that will help to send and pass data to the manage prescription 
 
 class MedicationModel {
+  String? documentId;
   String? uid;
   String? medicationName;
   String? medicationType;
@@ -17,6 +18,7 @@ class MedicationModel {
   int medicationIsCompleted = 0;
 
   MedicationModel({
+    this.documentId,
     this.uid, 
     this.medicationName,
     this.medicationType,
@@ -36,6 +38,7 @@ class MedicationModel {
   // Send Data to the Server
   Map <String, dynamic> toMap() {
     return {
+      'documentId': documentId,
       'uid': uid,
       'medicationName': medicationName,
       'medicationType': medicationType,
@@ -56,6 +59,7 @@ class MedicationModel {
   //Retrieve the Data from the Server
   factory MedicationModel.fromMap(map) {
     return MedicationModel(
+      documentId: map['documentId'],
       uid: map['uid'],
       medicationName: map['medicationName'],
       medicationType: map['medicationType'],

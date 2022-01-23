@@ -42,6 +42,7 @@ dependencies:
   google_fonts: ^2.2.0
   intl: ^0.17.0
   date_picker_timeline: ^1.2.3
+  circular_profile_avatar: ^2.0.5
   flutter_staggered_animations: ^1.0.0
   flutter_local_notifications: ^9.2.0
   flutter_native_timezone: ^2.0.0

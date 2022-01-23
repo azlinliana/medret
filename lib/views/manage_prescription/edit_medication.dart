@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:medret/models/medication_model.dart';
 import 'package:medret/views/elements/account_widget.dart';
 import 'package:medret/views/elements/app_theme.dart';
-import 'package:medret/models/medication_model.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class AddMedicationPatient extends StatefulWidget {
-  const AddMedicationPatient({ Key? key }) : super(key: key);
+class EditMedicationPatient extends StatefulWidget {
+  // const EditMedicationPatient({ Key? key }) : super(key: key);
+
+  DocumentSnapshot medicationToEdit;
+  EditMedicationPatient({Key? key, required this.medicationToEdit}) : super(key: key);
 
   @override
-  _AddMedicationPatientState createState() => _AddMedicationPatientState();
+  _EditMedicationPatientState createState() => _EditMedicationPatientState();
 }
 
-class _AddMedicationPatientState extends State<AddMedicationPatient> {
+class _EditMedicationPatientState extends State<EditMedicationPatient> {
   final _formKey = GlobalKey<FormState>();
+  // TextEditingController medicationName = TextEditingController(); 
+  // TextEditingController medicationPurpose = TextEditingController(); 
+  // TextEditingController medicationSize = TextEditingController(); 
+  // TextEditingController medicationNote = TextEditingController(); 
 
   final medicationNameEditingController = TextEditingController();
   final medicationPurposeEditingController = TextEditingController();
@@ -71,7 +78,14 @@ class _AddMedicationPatientState extends State<AddMedicationPatient> {
   String? documentId;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    // medicationName = TextEditingController(text: widget.medicationToEdit.data['medicationName']);
+    // medicationPurpose = TextEditingController(text: widget.medicationToEdit.data['medicationPurpose']);
+
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {  
     // Medication Name Field
     final medicationNameField = TextFormField(
       autofocus: false,
@@ -371,9 +385,9 @@ class _AddMedicationPatientState extends State<AddMedicationPatient> {
           color: addButtonColor,
           child: MaterialButton(
             onPressed: () {
-              addMedication();
+              // addMedication();
             },
-            child: const Text('ADD', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+            child: const Text('UPDATE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
           ),
         ),
       ],
@@ -382,7 +396,7 @@ class _AddMedicationPatientState extends State<AddMedicationPatient> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Add Medication'),
+          title: const Text('Edit Medication'),
           backgroundColor: mainAppColor,
           elevation: 0,
           leading: IconButton(
@@ -584,7 +598,7 @@ class _AddMedicationPatientState extends State<AddMedicationPatient> {
     .doc(documentId)
     .set(medicationModel.toMap());
 
-    Fluttertoast.showToast(msg: "Medication saved successfully!");
+    Fluttertoast.showToast(msg: "Medication updated successfully!");
 
     Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const AccountWidget()), (route) => false);
 
