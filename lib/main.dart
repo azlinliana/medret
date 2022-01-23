@@ -16,7 +16,7 @@ class MedretApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.indigo
+        primarySwatch: Colors.indigo,
       ),
       title: 'Medication Reminder and Tracker Application',
       home: const LandingPage(),

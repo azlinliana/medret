@@ -39,6 +39,12 @@ dependencies:
   firebase_auth: ^3.3.5
   cloud_firestore: ^3.1.6
   curved_navigation_bar: ^1.0.1
+  google_fonts: ^2.2.0
+  intl: ^0.17.0
+  date_picker_timeline: ^1.2.3
+  flutter_staggered_animations: ^1.0.0
+  flutter_local_notifications: ^9.2.0
+  flutter_native_timezone: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +75,7 @@ flutter:
     - assets/registerpatient.png
     - assets/forgotpassword.png
     - assets/defaultpatientprofile.png
+    - assets/nomedication.gif
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
