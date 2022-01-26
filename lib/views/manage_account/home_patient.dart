@@ -164,11 +164,11 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
                         child: FadeInAnimation(
                           child: GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => EditMedicationPatient(medicationToEdit: snapshot.data!.docs[index])));
+                              setState(() {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditMedicationPatient(medicationModel: medicationList[index])));
+                              });
                             },
                             onLongPress: () {
-                              setState(() {
-                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.only(top: 5, right: 20, left: 20),

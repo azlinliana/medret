@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:medret/models/medication_model.dart';
 import 'package:medret/views/elements/account_widget.dart';
 import 'package:medret/views/elements/app_theme.dart';
-import 'package:intl/intl.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class EditMedicationPatient extends StatefulWidget {
-  // const EditMedicationPatient({ Key? key }) : super(key: key);
-
-  DocumentSnapshot medicationToEdit;
-  EditMedicationPatient({Key? key, required this.medicationToEdit}) : super(key: key);
+  const EditMedicationPatient({ Key? key, required this.medicationModel }) : super(key: key);
+  final MedicationModel medicationModel;
 
   @override
   _EditMedicationPatientState createState() => _EditMedicationPatientState();
@@ -19,15 +17,53 @@ class EditMedicationPatient extends StatefulWidget {
 
 class _EditMedicationPatientState extends State<EditMedicationPatient> {
   final _formKey = GlobalKey<FormState>();
-  // TextEditingController medicationName = TextEditingController(); 
-  // TextEditingController medicationPurpose = TextEditingController(); 
-  // TextEditingController medicationSize = TextEditingController(); 
-  // TextEditingController medicationNote = TextEditingController(); 
 
   final medicationNameEditingController = TextEditingController();
   final medicationPurposeEditingController = TextEditingController();
   final medicationSizeEditingController = TextEditingController();
   final medicationNoteEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    medicationNameEditingController.dispose();
+    medicationPurposeEditingController.dispose();
+    medicationSizeEditingController.dispose();
+    medicationNoteEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    // ignore: unnecessary_null_comparison
+    if(widget.medicationModel == null) {
+      medicationNameEditingController.text= "";
+      _selectedMedicationType = "";
+      medicationPurposeEditingController.text= "";
+      medicationSizeEditingController.text= "";
+      _selectedMedicationUnit = "";
+      _selectedDate = DateTime.now();
+      _selectedMedicationIntake = "";
+      _selectedMedicationRemind = 5;
+      _selectedMedicationRepeat = "";
+      medicationNoteEditingController.text= "";
+      _selectedColor = 0;
+    }
+    else {
+      medicationNameEditingController.text = widget.medicationModel.medicationName!;
+      _selectedMedicationType = widget.medicationModel.medicationType!;
+      medicationPurposeEditingController.text = widget.medicationModel.medicationPurpose!;
+      medicationSizeEditingController.text = widget.medicationModel.medicationSize!;
+      _selectedMedicationUnit = widget.medicationModel.medicationUnit!;
+      // _selectedDate = DateFormat.yMd().format(widget.medicationModel.medicationDate!) as DateTime;
+      _time = widget.medicationModel.medicationTime!;
+      _selectedMedicationIntake = widget.medicationModel.medicationIntake!;
+      _selectedMedicationRemind = widget.medicationModel.medicationRemind!;
+      _selectedMedicationRepeat = widget.medicationModel.medicationRepeat!;
+      medicationNoteEditingController.text = widget.medicationModel.medicationNote!;
+      _selectedColor = widget.medicationModel.medicationColor!;
+    }
+    super.initState();
+  }
 
   String _selectedMedicationType = "Pills";
   List<String> medicationTypeList = [
@@ -78,14 +114,7 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
   String? documentId;
 
   @override
-  void initState() {
-    // medicationName = TextEditingController(text: widget.medicationToEdit.data['medicationName']);
-    // medicationPurpose = TextEditingController(text: widget.medicationToEdit.data['medicationPurpose']);
-
-    super.initState();
-  }
-  @override
-  Widget build(BuildContext context) {  
+  Widget build(BuildContext context) {
     // Medication Name Field
     final medicationNameField = TextFormField(
       autofocus: false,
@@ -385,7 +414,7 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
           color: addButtonColor,
           child: MaterialButton(
             onPressed: () {
-              // addMedication();
+              updateMedication();
             },
             child: const Text('UPDATE', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
           ),
@@ -567,36 +596,47 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
     );
   }
   // Add New Medication FUnction
-  addMedication() async {
+  updateMedication() async {
     // Call Firestore
     // Call MedicationModel
     // Send the Value to the Firestore
 
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _medication.currentUser;
+    // User? user = _medication.currentUser;
 
     MedicationModel medicationModel = MedicationModel();
 
-    // Write All the Values
-    medicationModel.documentId = documentId;
-    medicationModel.uid = user!.uid;
+    // // Write All the Values
+    // medicationModel.documentId = documentId;
+    // medicationModel.uid = user!.uid;
     medicationModel.medicationName = medicationNameEditingController.text;
-    medicationModel.medicationType = _selectedMedicationType;
-    medicationModel.medicationPurpose = medicationPurposeEditingController.text;
-    medicationModel.medicationSize = medicationSizeEditingController.text;
-    medicationModel.medicationUnit = _selectedMedicationUnit;
-    medicationModel.medicationDate = DateFormat.yMd().format(_selectedDate);
-    medicationModel.medicationTime = _time;
-    medicationModel.medicationIntake = _selectedMedicationIntake;
-    medicationModel.medicationRemind = _selectedMedicationRemind;
-    medicationModel.medicationRepeat = _selectedMedicationRepeat;
-    medicationModel.medicationNote = medicationNoteEditingController.text;
-    medicationModel.medicationColor = _selectedColor;
+    // medicationModel.medicationType = _selectedMedicationType;
+    // medicationModel.medicationPurpose = medicationPurposeEditingController.text;
+    // medicationModel.medicationSize = medicationSizeEditingController.text;
+    // medicationModel.medicationUnit = _selectedMedicationUnit;
+    // medicationModel.medicationDate = DateFormat.yMd().format(_selectedDate);
+    // medicationModel.medicationTime = _time;
+    // medicationModel.medicationIntake = _selectedMedicationIntake;
+    // medicationModel.medicationRemind = _selectedMedicationRemind;
+    // medicationModel.medicationRepeat = _selectedMedicationRepeat;
+    // medicationModel.medicationNote = medicationNoteEditingController.text;
+    // medicationModel.medicationColor = _selectedColor;
+    // final firebaseFirestore = FirebaseFirestore.instance;
+
+    // MedicationModel medicationModel = MedicationModel(
+    //   medicationName: medicationNameEditingController.text,
+    // );
+
+    // await firebaseFirestore
+    //   .collection("medications")
+    //   .doc(documentId)
+    //   .update(medicationModel.toMap());
+
 
     await firebaseFirestore
     .collection("medications")
     .doc(documentId)
-    .set(medicationModel.toMap());
+    .update(medicationModel.toMap());
 
     Fluttertoast.showToast(msg: "Medication updated successfully!");
 

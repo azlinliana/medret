@@ -76,4 +76,20 @@ class MedicationModel {
       medicationIsCompleted: map['medicationIsCompleted'],
     );
   }
+
+  // Update medication
+  // MedicationModel medicationUpdate = MedicationModel(
+  //   medicationName: "medicationName",
+  //   medicationType: "medicationType",
+  //   medicationPurpose: "medicationPurpose",
+  //   medicationSize: "medicationSize",
+  //   medicationUnit: "medicationUnit",
+  //   medicationDate: "medicationDate",
+  //   medicationTime: "medicationTime",
+  //   medicationIntake: "medicationIntake",
+  //   // medicationRemind: "medicationRemind",
+  //   medicationRepeat: "medicationRepeat",
+  //   medicationNote: "medicationNote",
+  //   medicationColor: 0,
+  // );
 }

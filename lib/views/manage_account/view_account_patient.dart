@@ -74,7 +74,7 @@ class _ViewAccountPatientState extends State<ViewAccountPatient> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    const Text('Email', style: TextStyle(fontSize: 18.0)),
+                    const Text('Email', style: TextStyle(fontSize: 17.0)),
                     const SizedBox(height: 10.0),
           
                     Text('${loggedInUser.email}', style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),),
@@ -97,23 +97,28 @@ class _ViewAccountPatientState extends State<ViewAccountPatient> {
             color: Colors.white,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Icon(Icons.account_box_outlined, size: 45.0, color: Colors.blue[100]),
-                const SizedBox(width: 8.0),
+                Row(
+                  children: [
+                    Icon(Icons.account_box_outlined, size: 42.0, color: Colors.blue[100]),
+                    const SizedBox(width: 8.0),
           
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const Text('Name', style: TextStyle(fontSize: 18.0)),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const Text('Name', style: TextStyle(fontSize: 16.0)),
           
-                    const SizedBox(height: 10.0),
+                        const SizedBox(height: 10.0),
           
-                    Text('${loggedInUser.firstName} ${loggedInUser.lastName}', style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),)
+                        Text('${loggedInUser.firstName} ${loggedInUser.lastName}', style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),)
+                      ],
+                    ),
                   ],
                 ),
                 IconButton(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),                  onPressed: () {
+                  onPressed: () {
                     Navigator.push(context, 
                       MaterialPageRoute(builder: (context) => const EditNamePatient())
                     );
@@ -135,34 +140,70 @@ class _ViewAccountPatientState extends State<ViewAccountPatient> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 21.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  IconButton(
-                    onPressed: () {}, 
-                    icon: Icon(Icons.vpn_key_outlined , size: 35.0, color: Colors.blue[100])
-                  ),
-                  
-                  const SizedBox(width: 8.0),
+                  Row(
+                    children: [
+                      Icon(Icons.vpn_key_outlined, size: 40.0, color: Colors.blue[100]),
+                      const SizedBox(width: 8.0),
               
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text('Password', style: TextStyle(fontSize: 18.0)),
-              
-                      const SizedBox(height: 10.0),
-              
-                      Text('${loggedInUser.firstName} ${loggedInUser.lastName}', style: TextStyle(fontSize: 16.0, color: Colors.grey[700]),)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Text('Change Password', style: TextStyle(fontSize: 18.0),),              
+                        ],
+                      ),
                     ],
                   ),
                   IconButton(
-                    padding: const EdgeInsets.fromLTRB(30, 0, 20, 0),
                     onPressed: () {
-                      // Navigator.push(context, 
-                      //   MaterialPageRoute(builder: (context) => const EditPasswordPatient())
-                      // );
+                      Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => const EditPasswordPatient())
+                      );
                     }, 
                    icon: Icon(Icons.keyboard_arrow_right_rounded, size: 40.0, color: Colors.blue[100])
+                  )
+                ],
+              ),
+            ),
+          ),   
+        ),
+    );
+    
+    // Display Change Theme
+    final displayChangeTheme = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      child: AnimationLimiter(
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 21.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Icon(Icons.dark_mode_outlined, size: 40.0, color: Colors.blue[100]),
+                      const SizedBox(width: 8.0),
+              
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: const <Widget>[
+                          Text('Theme Mode', style: TextStyle(fontSize: 18.0),),              
+                        ],
+                      ),
+                    ],
                   ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => const ChangeTheme())
+                      );
+                    }, 
+                   icon: Icon(Icons.keyboard_arrow_right_rounded, size: 40.0, color: Colors.blue[100])
+                  )
                 ],
               ),
             ),
@@ -246,14 +287,10 @@ class _ViewAccountPatientState extends State<ViewAccountPatient> {
             displayName,
 
             displayPassword,
-            // Card Item
 
-            // ListView.builder(
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemBuilder: (context, index) => cardItem(),
-            //   shrinkWrap: true,
-            //   // itemCount: 6,
-            // )
+            displayChangeTheme,
+
+            const SizedBox(height: 100,),
           ],
         ),
       ), //Stack Container
