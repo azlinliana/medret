@@ -46,6 +46,8 @@ dependencies:
   flutter_staggered_animations: ^1.0.0
   flutter_local_notifications: ^9.2.0
   flutter_native_timezone: ^2.0.0
+  firebase_storage: ^10.2.6
+  image_picker: ^0.8.4+5
 
 dev_dependencies:
   flutter_test:

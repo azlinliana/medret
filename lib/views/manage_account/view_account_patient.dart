@@ -244,13 +244,15 @@ class _ViewAccountPatientState extends State<ViewAccountPatient> {
                           '',
                           borderWidth: 4.0,
                           radius: 60.0,
-                          child: Image.asset('assets/defaultpatientprofile.png')
+                          child: Image.asset('assets/defaultpatientprofile.png'),
                         ),
       
-                        const SizedBox(height: 4.0),
-      
+                        const SizedBox(height: 3.0),
+
+                        Align(                        
+                          child: Text('${loggedInUser.username}', style: const TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold),),
+                        ),
                         // Display First Name + Second Name
-                        Text('${loggedInUser.username}', style: const TextStyle(fontSize: 21.0, fontWeight: FontWeight.bold)),
                         // Display User Role
                         Text(loggedInUser.role, style: TextStyle(color: Colors.grey[700])),  
                       ],
