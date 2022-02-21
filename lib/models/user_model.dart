@@ -7,6 +7,7 @@ class UserModel {
   String? username;
   String? email;
   String role = 'Patient';
+  String? avatarUrl;
 
   UserModel({
     this.uid, 
@@ -15,6 +16,7 @@ class UserModel {
     this.username, 
     this.email, 
     role,
+    this.avatarUrl
   });
 
   // Send Data to the Server
@@ -26,6 +28,7 @@ class UserModel {
       'username': username,
       'email': email,
       'role': role,
+      'avatarUrl': avatarUrl,
     };
   }
   
@@ -38,6 +41,7 @@ class UserModel {
       username: map['username'],
       email: map['email'],
       role: map['role'],
+      avatarUrl: map['avatarUrl'],
     );
   }
 }

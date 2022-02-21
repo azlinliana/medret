@@ -50,6 +50,7 @@ class NotificationService{
         payload: 'The payload has been specified, that will passed back through your application when the user has tapped on a notification.'
       );
     }
+    
 
     scheduledNotification(int hour, int minutes, MedicationModel notification) async {
       await flutterLocalNotificationsPlugin.zonedSchedule(

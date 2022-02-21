@@ -48,6 +48,9 @@ dependencies:
   flutter_native_timezone: ^2.0.0
   firebase_storage: ^10.2.6
   image_picker: ^0.8.4+5
+  flutter_animated_dialog: ^2.0.1
+  flutter_switch: ^0.3.2
+  awesome_notifications: ^0.6.21
 
 dev_dependencies:
   flutter_test:

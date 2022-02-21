@@ -206,6 +206,7 @@ class _RegisterPatientState extends State<RegisterPatient> {
         child: const Text('REGISTER', style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
       ),
     );
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: landingPageBackgroundColor,

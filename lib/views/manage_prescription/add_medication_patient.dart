@@ -238,7 +238,7 @@ class _AddMedicationPatientState extends State<AddMedicationPatient> {
       ), 
     );
 
-    // Medication Intake Field=
+    // Medication Intake Field
     final medicationIntakeField = Row(
       children: [
         Expanded(

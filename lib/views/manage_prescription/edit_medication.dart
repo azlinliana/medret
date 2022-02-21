@@ -109,7 +109,7 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
 
   int _selectedColor = 0;
   
-  final _medication = FirebaseAuth.instance;
+  // final _medication = FirebaseAuth.instance;
 
   String? documentId;
 

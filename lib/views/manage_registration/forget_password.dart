@@ -69,6 +69,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
     );
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.purple,
       ),

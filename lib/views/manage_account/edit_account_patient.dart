@@ -105,8 +105,7 @@ class _EditNamePatientState extends State<EditNamePatient> {
         onPressed: () {
           updateName();
         },
-        child: const Text('UPDATE', style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
-
+        child: const Text('UPDATE', style: TextStyle(color: Colors.white),textAlign: TextAlign.center),
       ),
     );
 
@@ -316,21 +315,5 @@ class _EditPasswordPatientState extends State<EditPasswordPatient> {
     }
 
     // Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const AccountWidget()), (route) => false);
-  }
-}
-
-class ChangeTheme extends StatefulWidget {
-  const ChangeTheme({ Key? key }) : super(key: key);
-
-  @override
-  _ChangeThemeState createState() => _ChangeThemeState();
-}
-
-class _ChangeThemeState extends State<ChangeTheme> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      
-    );
   }
 }
