@@ -13,34 +13,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePatient extends StatelessWidget {
-  const HomePatient({ Key? key }) : super(key: key);
+  const HomePatient({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(
-      title: const Text('MEDRET'),
-      backgroundColor: mainAppColor,
-      elevation: 0,
-      centerTitle: true,
-      systemOverlayStyle: const SystemUiOverlayStyle(statusBarColor: mainAppColor),
-    ),
-    body: const ViewHomePatient(),
-  );
+        appBar: AppBar(
+          title: const Text('MEDRET'),
+          backgroundColor: mainAppColor,
+          elevation: 0,
+          centerTitle: true,
+          systemOverlayStyle:
+              const SystemUiOverlayStyle(statusBarColor: mainAppColor),
+        ),
+        body: const ViewHomePatient(),
+      );
 }
 
 class ViewHomePatient extends StatefulWidget {
-  const ViewHomePatient({ Key? key }) : super(key: key);
+  const ViewHomePatient({Key? key}) : super(key: key);
 
   @override
-  _ViewHomePatientState createState() => _ViewHomePatientState();
+  ViewHomePatientState createState() => ViewHomePatientState();
 }
 
-class _ViewHomePatientState extends State<ViewHomePatient> {
+class ViewHomePatientState extends State<ViewHomePatient> {
   DateTime _selectedDate = DateTime.now();
-  
   User? user = FirebaseAuth.instance.currentUser;
-
   late final NotificationService notificationHelper;
+
+  final TextEditingController medicationNameEditingController =
+      TextEditingController();
+  final TextEditingController medicationPurposeEditingController =
+      TextEditingController();
+  final TextEditingController medicationSizeEditingController =
+      TextEditingController();
+  final TextEditingController medicationNoteEditingController =
+      TextEditingController();
 
   @override
   void initState() {
@@ -49,11 +57,6 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
     notificationHelper.initializeNotification();
   }
 
-  final medicationNameEditingController = TextEditingController();
-  final medicationPurposeEditingController = TextEditingController();
-  final medicationSizeEditingController = TextEditingController();
-  final medicationNoteEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -61,12 +64,11 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
         _header(),
         _dateTimeline(),
         _viewMedicationList(),
-        // const ViewMedicationList(),     
       ],
     );
   }
 
-  _header() {
+  Widget _header() {
     return Container(
       margin: const EdgeInsets.only(top: 10, left: 20, right: 20),
       child: Row(
@@ -77,7 +79,8 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(DateFormat.yMMMd().format(DateTime.now()), style: subHeadingStyle),
+                Text(DateFormat.yMMMd().format(DateTime.now()),
+                    style: subHeadingStyle),
                 Text('Today', style: headingStyle),
               ],
             ),
@@ -89,10 +92,18 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
                 borderRadius: BorderRadius.circular(30),
                 color: addButtonColor,
                 child: MaterialButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const AddMedicationPatient()));
-                },
-                  child: const Text('ADD MEDICATION',style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AddMedicationPatient()));
+                  },
+                  child: const Text(
+                    'ADD MEDICATION',
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
             ],
@@ -102,7 +113,7 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
     );
   }
 
-  _dateTimeline() {
+  Widget _dateTimeline() {
     return Container(
       margin: const EdgeInsets.only(top: 20, left: 20, bottom: 20),
       child: DatePicker(
@@ -112,15 +123,9 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
         initialSelectedDate: DateTime.now(),
         selectionColor: mainAppColor,
         selectedTextColor: Colors.white,
-        monthTextStyle: GoogleFonts.oswald(
-          color: Colors.grey,
-        ),
-        dateTextStyle: GoogleFonts.oswald(
-          color: Colors.grey,
-        ),
-        dayTextStyle: GoogleFonts.oswald(
-          color: Colors.grey,
-        ),
+        monthTextStyle: GoogleFonts.oswald(color: Colors.grey),
+        dateTextStyle: GoogleFonts.oswald(color: Colors.grey),
+        dayTextStyle: GoogleFonts.oswald(color: Colors.grey),
         onDateChange: (date) {
           setState(() {
             _selectedDate = date;
@@ -129,24 +134,29 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
       ),
     );
   }
-  
-  _viewMedicationList() {
-    var futureBuilder = FutureBuilder<QuerySnapshot>(
-      future: FirebaseFirestore.instance.collection('medications').where('uid', isEqualTo: user!.uid).get(),
+
+  Widget _viewMedicationList() {
+    return FutureBuilder<QuerySnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('medications')
+          .where('uid', isEqualTo: user!.uid)
+          .get(),
       builder: (context, snapshot) {
-        if(snapshot.hasData) {
-          List<MedicationModel> medicationList = snapshot.data!.docs.map((e) => MedicationModel.fromMap(e)).toList();
-          
-          // Notification Service to give reminder
+        if (snapshot.hasData) {
+          List<MedicationModel> medicationList = snapshot.data!.docs
+              .map((doc) =>
+                  MedicationModel.fromMap(doc.data() as Map<String, dynamic>))
+              .toList();
+
           for (var medication in medicationList) {
-            DateTime date = DateFormat.jm().parse(medication.medicationTime.toString());
+            DateTime date =
+                DateFormat.jm().parse(medication.medicationTime.toString());
             var myTime = DateFormat("HH:mm").format(date);
-            print("Something");
 
             notificationHelper.scheduledNotification(
-              int.parse(myTime.toString().split(":")[0]),
-              int.parse(myTime.toString().split(":")[1]),
-              medication
+              int.parse(myTime.split(":")[0]),
+              int.parse(myTime.split(":")[1]),
+              medication,
             );
           }
 
@@ -155,160 +165,105 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
               child: ListView.builder(
                 itemCount: medicationList.length,
                 itemBuilder: (BuildContext context, int index) {
-                  if(medicationList[index].medicationRepeat == 'Daily') {
+                  final med = medicationList[index];
+
+                  if (med.medicationRepeat == 'Daily' ||
+                      med.medicationDate ==
+                          DateFormat.yMd().format(_selectedDate)) {
                     return AnimationConfiguration.staggeredList(
-                      position: index, 
+                      position: index,
                       duration: const Duration(milliseconds: 800),
                       child: SlideAnimation(
                         verticalOffset: 50.0,
                         child: FadeInAnimation(
                           child: GestureDetector(
                             onTap: () {
-                              setState(() {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditMedicationPatient(medicationModel: medicationList[index])));
-                              });
-                            },
-                            onLongPress: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => EditMedicationPatient(
+                                    medicationModel: med,
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
-                              padding: const EdgeInsets.only(top: 5, right: 20, left: 20),
+                              padding: const EdgeInsets.only(
+                                  top: 5, right: 20, left: 20),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
-                                color: getColor(medicationList[index].medicationColor??0),
+                                color: getColor(med.medicationColor ?? 0),
                               ),
                               height: 80,
-                              margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
+                              margin: const EdgeInsets.only(
+                                  right: 20, left: 20, bottom: 20),
                               child: Row(
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Text(medicationList[index].medicationName!, style: headingStyleTwo),
+                                        Text(med.medicationName ?? '',
+                                            style: headingStyleTwo),
                                         const SizedBox(height: 5),
-                                        
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(medicationList[index].medicationSize!),
-                                            Text(medicationList[index].medicationUnit!),
+                                            Text(med.medicationSize ?? ''),
+                                            Text(med.medicationUnit ?? ''),
                                             const SizedBox(height: 5),
                                           ],
                                         ),
-                                        Text('${medicationList[index].medicationIntake!} meals', style: subHeadingStyleThree),
+                                        Text('${med.medicationIntake ?? ''} meals',
+                                            style: subHeadingStyleThree),
                                       ],
-                                    )
+                                    ),
                                   ),
                                   Row(
                                     children: [
-                                      const Icon(Icons.access_alarm, size: 20, color: Colors.white),
-                                      Text(medicationList[index].medicationTime!, style: showTimeStyle),
+                                      const Icon(Icons.access_alarm,
+                                          size: 20, color: Colors.white),
+                                      Text(med.medicationTime ?? '',
+                                          style: showTimeStyle),
                                       Container(
-                                        margin: const EdgeInsets.only(left: 10, right: 5),
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 10),
                                         height: 60,
                                         width: 1.5,
                                         color: Colors.grey[200],
                                       ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 6),
-                                        child: RotatedBox(
-                                          quarterTurns: 3,
-                                          child: getMedicationStatus(medicationList[index].medicationIsCompleted),),
+                                      RotatedBox(
+                                        quarterTurns: 3,
+                                        child: getMedicationStatus(
+                                            med.medicationIsCompleted),
                                       ),
                                     ],
                                   ),
                                 ],
-                              )
-                            ),
-                          )
-                        ),
-                      )
-                    );
-                  }
-                  if(medicationList[index].medicationDate == DateFormat.yMd().format(_selectedDate)) {
-                    return AnimationConfiguration.staggeredList(
-                      position: index, 
-                      duration: const Duration(milliseconds: 800),
-                      child: SlideAnimation(
-                        verticalOffset: 50.0,
-                        child: FadeInAnimation(
-                          child: GestureDetector(
-                            onTap: () {},
-                            onLongPress: (){},
-                            child: Container(
-                              padding: const EdgeInsets.only(top: 5, right: 20, left: 20),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: getColor(medicationList[index].medicationColor??0),
                               ),
-                              height: 80,
-                              margin: const EdgeInsets.only(right: 20, left: 20, bottom: 20),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(medicationList[index].medicationName!, style: headingStyleTwo),
-                                        const SizedBox(height: 5),
-                                        
-                                        Row(
-                                          children: [
-                                            Text(medicationList[index].medicationSize!),
-                                            Text(medicationList[index].medicationUnit!),
-                                            const SizedBox(height: 5),
-                                          ],
-                                        ),
-                                        Text('${medicationList[index].medicationIntake!} meals', style: subHeadingStyleThree),
-                                      ],
-                                    )
-                                  ),
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.access_alarm, size: 20, color: Colors.white),
-                                      Text(medicationList[index].medicationTime!, style: showTimeStyle),
-                                      Container(
-                                        margin: const EdgeInsets.only(left: 10, right: 5),
-                                        height: 60,
-                                        width: 1.5,
-                                        color: Colors.grey[200],
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(vertical: 6),
-                                        child: RotatedBox(
-                                          quarterTurns: 3,
-                                          child: getMedicationStatus(medicationList[index].medicationIsCompleted),),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
                             ),
-                          )
+                          ),
                         ),
-                      )
+                      ),
                     );
+                  } else {
+                    return Container(); // Not shown
                   }
-                  else {
-                    return Container();
-                  }
-                }
+                },
               ),
             ),
           );
-        }
-        else if (snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return const Text("It's Error!");
-        }
-        else {
+        } else {
           return const CircularProgressIndicator(color: mainAppColor);
         }
       },
     );
-    return futureBuilder;
   }
-  
-  getColor(int colorNumber) {
+
+  Color getColor(int colorNumber) {
     switch (colorNumber) {
       case 0:
         return fillOne;
@@ -320,15 +275,21 @@ class _ViewHomePatientState extends State<ViewHomePatient> {
         return fillOne;
     }
   }
-    
-  getMedicationStatus(int statusNumber) {
+
+  Widget getMedicationStatus(int statusNumber) {
     switch (statusNumber) {
       case 0:
-        return const Text('Unomplete', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
+        return const Text('Uncomplete',
+            style: TextStyle(
+                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
       case 1:
-        return const Text('Complete', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
+        return const Text('Complete',
+            style: TextStyle(
+                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
       default:
-        return const Text('Uncomplete', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
+        return const Text('Uncomplete',
+            style: TextStyle(
+                fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white));
     }
   }
 }

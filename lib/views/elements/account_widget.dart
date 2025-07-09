@@ -6,41 +6,42 @@ import 'package:medret/views/manage_tracker/view_tracker.dart';
 import 'package:medret/views/elements/app_theme.dart';
 
 class AccountWidget extends StatefulWidget {
-  const AccountWidget({ Key? key }) : super(key: key);
+  const AccountWidget({Key? key}) : super(key: key);
 
   @override
-  _AccountWidgetState createState() => _AccountWidgetState();
+  AccountWidgetState createState() => AccountWidgetState(); // ✅ Now using public State class
 }
 
-class _AccountWidgetState extends State<AccountWidget> {
-  final _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
+class AccountWidgetState extends State<AccountWidget> {
+  final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey<CurvedNavigationBarState>();
 
-  // Displaying All the Pages when Tapping on Bottom Navigation Bar Icon
-  final pages = [
+  // Pages to switch between
+  final List<Widget> pages = [
     const AccountPatient(),
     const HomePatient(),
     const Tracker(),
   ];
 
-  // Returning Index = 1 of Bottom Navigation Bar (Returning Home as the First Screen User will See after a Successful Login)
-  int selectedIndex = 1; 
+  // Start with index 1 (Home)
+  int selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
-    final items = <Widget>[
+    final List<Widget> items = [
       const Icon(Icons.person, size: 30),
       const Icon(Icons.home, size: 30),
       const Icon(Icons.history, size: 30),
     ];
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         extendBody: true,
         body: pages[selectedIndex],
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
             iconTheme: const IconThemeData(color: Colors.black),
-          ), 
+          ),
           child: CurvedNavigationBar(
             key: _bottomNavigationKey,
             backgroundColor: Colors.transparent,
@@ -51,13 +52,14 @@ class _AccountWidgetState extends State<AccountWidget> {
             animationDuration: const Duration(milliseconds: 300),
             index: selectedIndex,
             items: items,
-            onTap: (selectedIndex) => setState(() {
-              this.selectedIndex = selectedIndex;
-            }),
+            onTap: (int index) {
+              setState(() {
+                selectedIndex = index;
+              });
+            },
           ),
         ),
       ),
-      debugShowCheckedModeBanner: false,
     );
   }
 }

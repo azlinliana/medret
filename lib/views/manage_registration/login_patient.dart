@@ -7,16 +7,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPatient extends StatefulWidget {
-  const LoginPatient({ Key? key }) : super(key: key);
+  const LoginPatient({Key? key}) : super(key: key);
 
   @override
-  _LoginPatientState createState() => _LoginPatientState();
+  LoginPatientState createState() => LoginPatientState();
 }
 
-class _LoginPatientState extends State<LoginPatient> {
+class LoginPatientState extends State<LoginPatient> {
   final _formKey = GlobalKey<FormState>();
 
- // Editing Controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -24,18 +23,16 @@ class _LoginPatientState extends State<LoginPatient> {
 
   @override
   Widget build(BuildContext context) {
-    // Email Address Field
     final emailField = TextFormField(
       autofocus: false,
       controller: emailController,
       keyboardType: TextInputType.emailAddress,
-      validator:(value) {
+      validator: (value) {
         if (value!.isEmpty) {
-          return('Please Enter Your Email!');
+          return 'Please Enter Your Email!';
         }
-        // Reg Expression for Email Validator
-        if (!RegExp("^[a-zA-Z0-9+_.-]+.[a-z]").hasMatch(value)) {
-          return('Please Enter a Valid Email');
+        if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]").hasMatch(value)) {
+          return 'Please Enter a Valid Email';
         }
         return null;
       },
@@ -47,13 +44,12 @@ class _LoginPatientState extends State<LoginPatient> {
         prefixIcon: const Icon(Icons.mail),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: 'Email Address',
-        border:  OutlineInputBorder(
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-        )
-      ),    
+        ),
+      ),
     );
 
-    // Password Field
     final passwordField = TextFormField(
       autofocus: false,
       controller: passwordController,
@@ -61,11 +57,12 @@ class _LoginPatientState extends State<LoginPatient> {
       validator: (value) {
         RegExp regex = RegExp(r'^.{6,}$');
         if (value!.isEmpty) {
-          return('Please Enter Your Password!');
+          return 'Please Enter Your Password!';
         }
         if (!regex.hasMatch(value)) {
-          return('Please Enter a Valid Password (Minimum 6 characters)');
+          return 'Please Enter a Valid Password (Minimum 6 characters)';
         }
+        return null;
       },
       onSaved: (value) {
         passwordController.text = value!;
@@ -75,13 +72,12 @@ class _LoginPatientState extends State<LoginPatient> {
         prefixIcon: const Icon(Icons.vpn_key),
         contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         hintText: 'Password',
-        border:  OutlineInputBorder(
+        border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-        )
-      ),          
+        ),
+      ),
     );
 
-    // Login Button
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
@@ -92,7 +88,11 @@ class _LoginPatientState extends State<LoginPatient> {
         onPressed: () {
           signIn(emailController.text, passwordController.text);
         },
-        child: const Text('LOGIN', style: TextStyle(color: Colors.white),textAlign: TextAlign.center,)
+        child: const Text(
+          'LOGIN',
+          style: TextStyle(color: Colors.white),
+          textAlign: TextAlign.center,
+        ),
       ),
     );
 
@@ -103,17 +103,16 @@ class _LoginPatientState extends State<LoginPatient> {
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
-          }, 
+          },
           icon: const Icon(Icons.arrow_back_ios_new, color: mainAppColor),
         ),
       ),
-      body: 
-      Container(
+      body: Container(
         color: landingPageBackgroundColor,
         child: Center(
           child: SingleChildScrollView(
             child: Padding(
-              padding:const EdgeInsets.all(36.0),
+              padding: const EdgeInsets.all(36.0),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -122,55 +121,74 @@ class _LoginPatientState extends State<LoginPatient> {
                   children: [
                     SizedBox(
                       height: 60,
-                      child: Title(color: const Color.fromRGBO(19, 15, 64,1.0), child: const Text('Welcome, Patient!', style: TextStyle(fontFamily: 'Dancing Script', fontSize: 25),)),
+                      child: Title(
+                        color: const Color.fromRGBO(19, 15, 64, 1.0),
+                        child: const Text(
+                          'Welcome, Patient!',
+                          style: TextStyle(
+                              fontFamily: 'Dancing Script', fontSize: 25),
+                        ),
+                      ),
                     ),
-
                     SizedBox(
                       height: 200,
-                      child: Image.asset('assets/authpatient.png', fit: BoxFit.contain,)
+                      child: Image.asset(
+                        'assets/authpatient.png',
+                        fit: BoxFit.contain,
+                      ),
                     ),
                     const SizedBox(height: 45),
-
                     emailField,
                     const SizedBox(height: 25),
-
                     passwordField,
                     const SizedBox(height: 25),
-
                     loginButton,
                     const SizedBox(height: 10),
-
                     Row(
                       textDirection: TextDirection.rtl,
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => const ForgetPassword())
-                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ForgetPassword()));
                           },
-                          child: const Text('Forgot password?', style: TextStyle(color: Colors.blue,decoration: TextDecoration.underline),),
+                          child: const Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline),
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('Does not have an account? '),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(context, 
-                              MaterialPageRoute(builder: (context) => const RegisterPatient())
-                            );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterPatient()));
                           },
-                          child: const Text('Register Now!', style: TextStyle(color: Colors.indigo,fontWeight: FontWeight.bold,),),
+                          child: const Text(
+                            'Register Now!',
+                            style: TextStyle(
+                              color: Colors.indigo,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ],
-                )
+                ),
               ),
             ),
           ),
@@ -179,16 +197,23 @@ class _LoginPatientState extends State<LoginPatient> {
     );
   }
 
-  // Login Function
+  // ✅ Login Function with context.mounted check
   void signIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
-      await _auth.signInWithEmailAndPassword(email: email, password: password).then((uid) => {
-        Fluttertoast.showToast(msg: "Successfully Login"),
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const AccountWidget()))
-      })
-      .catchError((e){
-        Fluttertoast.showToast(msg: e!.message);
-      });
+      try {
+        await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+        if (!mounted) return;
+
+        Fluttertoast.showToast(msg: "Successfully Login");
+
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AccountWidget()),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (!mounted) return;
+        Fluttertoast.showToast(msg: e.message ?? "Login failed");
+      }
     }
   }
 }

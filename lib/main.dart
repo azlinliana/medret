@@ -43,10 +43,10 @@ class LandingPage extends StatefulWidget {
   const LandingPage({ Key? key }) : super(key: key);
 
   @override
-  _LandingPageState createState() => _LandingPageState();
+  LandingPageState createState() => LandingPageState(); // ✅ now returns a public type
 }
 
-class _LandingPageState extends State<LandingPage> {
+class LandingPageState extends State<LandingPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -59,10 +59,17 @@ class _LandingPageState extends State<LandingPage> {
               width: 300,
               child: Image.asset('assets/landingpage.png'),
             ),
-            Title(color: const Color.fromRGBO(19, 15, 64, 1.0), child: const Text('MEDRET', style: TextStyle(fontSize: 36),),),
+            Title(
+              color: const Color.fromRGBO(19, 15, 64, 1.0),
+              child: const Text('MEDRET', style: TextStyle(fontSize: 36)),
+            ),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 60.0),
-              child: const Text('An app that helps you to organize and keep track your medication intake', style: TextStyle(fontSize: 18, color: Colors.black),textAlign: TextAlign.justify,),
+              child: const Text(
+                'An app that helps you to organize and keep track your medication intake',
+                style: TextStyle(fontSize: 18, color: Colors.black),
+                textAlign: TextAlign.justify,
+              ),
             ),
             SizedBox(
               width: 280,
@@ -72,11 +79,12 @@ class _LandingPageState extends State<LandingPage> {
                 color: mainAppColor,
                 child: MaterialButton(
                   onPressed: () {
-                    Navigator.push(context, 
-                      MaterialPageRoute(builder: (context) => const LoginPatient())
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPatient()),
                     );
                   },
-                  child: const Text('CONTINUE TO THE APP', style: TextStyle(color: Colors.white),),
+                  child: const Text('CONTINUE TO THE APP', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ),

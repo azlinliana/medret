@@ -5,17 +5,16 @@ import 'package:medret/views/elements/account_widget.dart';
 import 'package:medret/views/elements/app_theme.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class EditMedicationPatient extends StatefulWidget {
   const EditMedicationPatient({ Key? key, required this.medicationModel }) : super(key: key);
   final MedicationModel medicationModel;
 
   @override
-  _EditMedicationPatientState createState() => _EditMedicationPatientState();
+  EditMedicationPatientState createState() => EditMedicationPatientState();
 }
 
-class _EditMedicationPatientState extends State<EditMedicationPatient> {
+class EditMedicationPatientState extends State<EditMedicationPatient> {
   final _formKey = GlobalKey<FormState>();
 
   final medicationNameEditingController = TextEditingController();
@@ -512,45 +511,42 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
       ),
     );
   }
-  _getDate() async {
-      DateTime? _pickerDate = await showDatePicker(
-      context: context, 
-      initialDate: DateTime.now(), 
-      firstDate: DateTime(2021), 
+
+  Future<void> _getDate() async {
+    DateTime? pickerDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
       lastDate: DateTime(2120),
     );
 
-    if(_pickerDate!=null) {
+    if (pickerDate != null) {
       setState(() {
-        _selectedDate = _pickerDate;
-        // ignore: avoid_print
-        print(_selectedDate);
-
+        _selectedDate = pickerDate;
+        debugPrint(_selectedDate.toString());
       });
-    }
-    else{
-      // ignore: avoid_print
-      print("It's null or something is wrong!");
+    } else {
+      debugPrint("It's null or something is wrong!");
     }
   }
 
-  _getTime({required bool isStartTime}) async {
+  Future<void> _getTime({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
-    String _formatedTime = pickedTime.format(context);
 
-    if(pickedTime==null) {
-      // ignore: avoid_print
-      print("Time canceled!");
-    }
-    else if(isStartTime==true) {
+    if (!mounted) return;
+
+    if (pickedTime == null) {
+      debugPrint("Time canceled!");
+    } else if (isStartTime) {
+      String formattedTime = pickedTime.format(context);
       setState(() {
-        _time = _formatedTime;
-
+        _time = formattedTime;
       });
     }
   }
 
-  _showTimePicker() {
+  
+  Future<TimeOfDay?> _showTimePicker() {
     return showTimePicker(
       initialEntryMode: TimePickerEntryMode.input,
       context: context, 
@@ -561,86 +557,60 @@ class _EditMedicationPatientState extends State<EditMedicationPatient> {
     );
   }
 
-  _getPallete () {
-    return  Column(
+  Widget _getPallete() {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 8),
-        // Put element in horizonatal line
         Wrap(
           children: List<Widget>.generate(
-            3, 
+            3,
             (int index) {
               return GestureDetector(
                 onTap: () {
                   setState(() {
                     _selectedColor = index;
-                    // ignore: avoid_print
-                    print("$index");
+                    debugPrint("$index");
                   });
                 },
                 child: Padding(
                   padding: const EdgeInsets.only(right: 6.0, bottom: 5.0),
                   child: CircleAvatar(
                     radius: 14,
-                    backgroundColor: index==0?fillOne:index==1?fillTwo:fillThree,
-                    child: _selectedColor==index?const Icon(Icons.done, color: Colors.white, size: 20,): 
-                    Container(),
+                    backgroundColor: index == 0 ? fillOne : index == 1 ? fillTwo : fillThree,
+                    child: _selectedColor == index
+                        ? const Icon(Icons.done, color: Colors.white, size: 20)
+                        : Container(),
                   ),
                 ),
               );
-            }
+            },
           ),
         ),
       ],
     );
   }
-  // Add New Medication FUnction
-  updateMedication() async {
-    // Call Firestore
-    // Call MedicationModel
-    // Send the Value to the Firestore
 
+  // Add New Medication FUnction
+  Future<void> updateMedication() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    // User? user = _medication.currentUser;
 
     MedicationModel medicationModel = MedicationModel();
-
-    // // Write All the Values
-    // medicationModel.documentId = documentId;
-    // medicationModel.uid = user!.uid;
     medicationModel.medicationName = medicationNameEditingController.text;
-    // medicationModel.medicationType = _selectedMedicationType;
-    // medicationModel.medicationPurpose = medicationPurposeEditingController.text;
-    // medicationModel.medicationSize = medicationSizeEditingController.text;
-    // medicationModel.medicationUnit = _selectedMedicationUnit;
-    // medicationModel.medicationDate = DateFormat.yMd().format(_selectedDate);
-    // medicationModel.medicationTime = _time;
-    // medicationModel.medicationIntake = _selectedMedicationIntake;
-    // medicationModel.medicationRemind = _selectedMedicationRemind;
-    // medicationModel.medicationRepeat = _selectedMedicationRepeat;
-    // medicationModel.medicationNote = medicationNoteEditingController.text;
-    // medicationModel.medicationColor = _selectedColor;
-    // final firebaseFirestore = FirebaseFirestore.instance;
-
-    // MedicationModel medicationModel = MedicationModel(
-    //   medicationName: medicationNameEditingController.text,
-    // );
-
-    // await firebaseFirestore
-    //   .collection("medications")
-    //   .doc(documentId)
-    //   .update(medicationModel.toMap());
-
 
     await firebaseFirestore
-    .collection("medications")
-    .doc(documentId)
-    .update(medicationModel.toMap());
+        .collection("medications")
+        .doc(documentId)
+        .update(medicationModel.toMap());
 
     Fluttertoast.showToast(msg: "Medication updated successfully!");
 
-    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const AccountWidget()), (route) => false);
+    if (!mounted) return; // ✅ safeguard against invalid context
 
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const AccountWidget()),
+      (route) => false,
+    );
   }
 }

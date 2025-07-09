@@ -57,7 +57,7 @@ class MedicationModel {
   }
   
   //Retrieve the Data from the Server
-  factory MedicationModel.fromMap(map) {
+  factory MedicationModel.fromMap(Map<String, dynamic> map) {
     return MedicationModel(
       documentId: map['documentId'],
       uid: map['uid'],
@@ -76,6 +76,7 @@ class MedicationModel {
       medicationIsCompleted: map['medicationIsCompleted'],
     );
   }
+
 
   // Update medication
   // MedicationModel medicationUpdate = MedicationModel(

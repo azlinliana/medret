@@ -23,14 +23,14 @@ class ViewTracker extends StatefulWidget {
   const ViewTracker({ Key? key }) : super(key: key);
 
   @override
-  _ViewTrackerState createState() => _ViewTrackerState();
+  ViewTrackerState createState() => ViewTrackerState();
 }
 
-class _ViewTrackerState extends State<ViewTracker> {
+class ViewTrackerState extends State<ViewTracker> {
   @override
   Widget build(BuildContext context) {
     return Container(
-    
+      // Your UI here
     );
   }
 }

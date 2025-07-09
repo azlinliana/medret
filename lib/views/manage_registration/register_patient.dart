@@ -11,10 +11,10 @@ class RegisterPatient extends StatefulWidget {
   const RegisterPatient({ Key? key }) : super(key: key);
 
   @override
-  _RegisterPatientState createState() => _RegisterPatientState();
+  RegisterPatientState createState() => RegisterPatientState(); // ✅ Now uses a public type
 }
 
-class _RegisterPatientState extends State<RegisterPatient> {
+class RegisterPatientState extends State<RegisterPatient> {
   final _formKey = GlobalKey<FormState>();
   
   final firstNameEditingController = TextEditingController();
@@ -151,6 +151,8 @@ class _RegisterPatientState extends State<RegisterPatient> {
         if (!regex.hasMatch(value)) {
           return('Please Enter a Valid Password (Minimum 6 characters)');
         }
+
+        return null;
       },
       onSaved: (value) {
         passwordEditingController.text = value!;
@@ -290,42 +292,45 @@ class _RegisterPatientState extends State<RegisterPatient> {
       ),
     );
   }
+  
   // Register function
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       await _auth.createUserWithEmailAndPassword(email: email, password: password)
-      .then((value) => {
-        addUser()
-      }).catchError((e) {
-        Fluttertoast.showToast(msg: e!.message);
-      });
+        .then((value) {
+          addUser();
+        }).catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
+          return null; // ✅ Add this to silence "must return" error
+        });
     }
   }
 
-  addUser() async {
-    // Call Firestore
-    // Call UserModel
-    // Send the Value to the Firestore
-
+  Future<void> addUser() async {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 
     UserModel userModel = UserModel();
 
-    // Write All the Values
     userModel.uid = user!.uid;
     userModel.email = user.email;
     userModel.firstName = firstNameEditingController.text;
     userModel.lastName = lastNameEditingController.text;
     userModel.username = usernameEditingController.text;
-    userModel.firstName = firstNameEditingController.text;
 
     await firebaseFirestore
-      .collection("users")
-      .doc(user.uid)
-      .set(userModel.toMap());
+        .collection("users")
+        .doc(user.uid)
+        .set(userModel.toMap());
+
+    if (!mounted) return;
+
     Fluttertoast.showToast(msg: "Account created successfully!");
 
-    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => const AccountWidget()), (route) => false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const AccountWidget()),
+      (route) => false,
+    );
   }
 }

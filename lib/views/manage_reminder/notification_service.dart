@@ -9,24 +9,27 @@ class NotificationService{
   
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // We'll be called when button is pressed - dark theme
-  initializeNotification() async {
-    // tz.initializeTimeZones(); Don't need this anymore because use _configureLocalTimezone();
-    _configureLocalTimeZone();
+    // We'll be called when button is pressed - dark theme
+    Future<void> initializeNotification() async {
+      // tz.initializeTimeZones(); Don't need this anymore because use _configureLocalTimezone();
+      await _configureLocalTimeZone();
 
-    const AndroidInitializationSettings initializationSettingsAndroid = 
-    AndroidInitializationSettings('app_icon');
+      const AndroidInitializationSettings initializationSettingsAndroid =
+          AndroidInitializationSettings('app_icon');
 
-    const InitializationSettings initializationSettings =
-    InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
+      const InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+      );
 
-    await flutterLocalNotificationsPlugin.initialize(
-      initializationSettings,
-      onSelectNotification: selectNotification
-    );
-  }
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse:
+            (NotificationResponse notificationResponse) {
+          selectNotification(notificationResponse.payload);
+        },
+      );
+    }
+
 
     // Immediate Notification when clicking the button
     Future<void> displayNotification({required String title, required String body}) async {
@@ -50,30 +53,27 @@ class NotificationService{
         payload: 'The payload has been specified, that will passed back through your application when the user has tapped on a notification.'
       );
     }
-    
 
-    scheduledNotification(int hour, int minutes, MedicationModel notification) async {
+    Future<void> scheduledNotification(int hour, int minutes, MedicationModel notification) async {
       await flutterLocalNotificationsPlugin.zonedSchedule(
-        0, 
-        notification.medicationName, 
-        'Time for your medication', 
+        0,
+        notification.medicationName,
+        'Time for your medication',
         _convertTime(hour, minutes),
-        // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
         const NotificationDetails(
           android: AndroidNotificationDetails(
-            'Your channel ID', 
+            'Your channel ID',
             'Your channel name',
-            channelDescription: 'repeating description'
+            channelDescription: 'repeating description',
           ),
         ),
-        // scheduledDate, 
-        // notificationDetails, 
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
-        // Will get notification everyday on the certain time
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
         matchDateTimeComponents: DateTimeComponents.time,
-        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime,
       );
     }
+
 
     tz.TZDateTime _convertTime(int hour, int minutes) {
       final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
@@ -98,7 +98,7 @@ class NotificationService{
       debugPrint('notification payload: $payload');
     }
     else {
-      print("Notification Done");
+      debugPrint("Notification Done");
     }
     // await Navigator.push(
     //   context,
